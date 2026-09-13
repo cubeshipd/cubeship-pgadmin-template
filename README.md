@@ -4,15 +4,16 @@
 PostgreSQL: browse schemas, run queries, and manage roles and backups from the
 browser.
 
-This template installs it on a Cubeship instance, with a managed Postgres that
-holds pgAdmin's own accounts and saved servers.
+This template installs it on a Cubeship instance, with a volume for everything
+pgAdmin keeps.
 
 ## What it creates
 
 - **pgadmin** — pgAdmin, from `dpage/pgadmin4:9.17`, answering on the domain
-  you choose.
-- **pgadmin-db** — a managed Postgres 18 database where pgAdmin keeps its
-  configuration. It is not a database for you to administer.
+  you choose, with a volume at `/var/lib/pgadmin`: accounts, saved servers,
+  preferences, sessions and the files you upload.
+
+It needs Cubeship 0.7.0 or newer.
 
 ## What you are asked
 
@@ -33,11 +34,11 @@ holds pgAdmin's own accounts and saved servers.
 The email and password only create the first account. Changing the variables
 afterwards changes nothing.
 
-## What is not kept
+## The volume
 
-Accounts, saved servers and preferences are in `pgadmin-db` and stay. Files you
-upload to pgAdmin's storage manager are on the container's disk and are gone on
-the next deploy, and so is every session, so everybody signs in again.
+The app runs as one copy on the machine its volume is on, and a deploy stops
+it for a few seconds. Back the volume up from the app's settings: pgAdmin's
+saved server passwords are in it.
 
 ## Resources
 

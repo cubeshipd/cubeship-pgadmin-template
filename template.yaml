@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://cubeship.dev/schema/template/v1.json
 version: 1
-minCubeship: "0.6.0"
+# The first release that gives a volume to the user its image runs as;
+# pgAdmin runs as 5050 and cannot write to one owned by root.
+minCubeship: "0.7.0"
 project: pgadmin
 
 inputs:
@@ -17,13 +19,6 @@ inputs:
     label: The password you sign in with
     generate: 24
 
-databases:
-  - key: db
-    name: pgadmin-db
-    engine: postgres
-    version: "18"
-    database: pgadmin
-
 apps:
   - key: web
     name: pgadmin
@@ -33,11 +28,9 @@ apps:
     health: /misc/ping
     domains:
       - host: ${input.domain}
+    volumes:
+      - path: /var/lib/pgadmin
     limits: { cpu: 1, memory: 1Gi }
     env:
       PGADMIN_DEFAULT_EMAIL: ${input.email}
       PGADMIN_DEFAULT_PASSWORD: ${input.password}
-      # Accounts and saved servers go to Postgres rather than the SQLite
-      # under /var/lib/pgadmin, which a deploy would throw away. The value
-      # is a Python literal, so the quotes are part of it.
-      PGADMIN_CONFIG_CONFIG_DATABASE_URI: "'postgresql://${db.db.user}:${db.db.password}@${db.db.host}:${db.db.port}/${db.db.name}'"
