@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://cubeship.dev/schema/template/v1.json
+version: 1
+minCubeship: "0.6.0"
+project: pgadmin
+
+inputs:
+  - key: domain
+    type: domain
+    label: Where pgAdmin answers
+  - key: email
+    type: text
+    label: The email you sign in with
+    help: pgAdmin refuses special-use domains, like example.com or anything ending in .local.
+    pattern: ^[^@\s]+@[^@\s]+\.[^@\s]+$
+  - key: password
+    type: secret
+    label: The password you sign in with
+    generate: 24
+
+databases:
+  - key: db
+    name: pgadmin-db
+    engine: postgres
+    version: "18"
+    database: pgadmin
+
+apps:
+  - key: web
+    name: pgadmin
+    image: dpage/pgadmin4
+    tag: "9.17"
+    port: 80
+    health: /misc/ping
+    domains:
+      - host: ${input.domain}
+    limits: { cpu: 1, memory: 1Gi }
+    env:
+      PGADMIN_DEFAULT_EMAIL: ${input.email}
+      PGADMIN_DEFAULT_PASSWORD: ${input.password}
+      # Accounts and saved servers go to Postgres rather than the SQLite
+      # under /var/lib/pgadmin, which a deploy would throw away. The value
+      # is a Python literal, so the quotes are part of it.
+      PGADMIN_CONFIG_CONFIG_DATABASE_URI: "'postgresql://${db.db.user}:${db.db.password}@${db.db.host}:${db.db.port}/${db.db.name}'"
