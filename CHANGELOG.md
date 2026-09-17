@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/cubeshipd/cubeship-pgadmin-template/compare/v1.0.1...v1.0.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* cut a release when the upstream app updates ([cb2f949](https://github.com/cubeshipd/cubeship-pgadmin-template/commit/cb2f949647ef9b57a1e49ab50deba33fd02e43d2))
+
 ## [1.0.1](https://github.com/cubeshipd/cubeship-pgadmin-template/compare/v1.0.0...v1.0.1) (2026-09-13)
 
 
