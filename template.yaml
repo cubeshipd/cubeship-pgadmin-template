@@ -23,7 +23,7 @@ apps:
   - key: web
     name: pgadmin
     image: dpage/pgadmin4
-    tag: "9.17"
+    tag: "9.18"
     port: 80
     health: /misc/ping
     domains:
